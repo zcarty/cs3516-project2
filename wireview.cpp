@@ -1,24 +1,48 @@
-// callback function
+#include <iostream>
+#include <stdio.h>
+#include <pcap.h>
+using namespace std;
+
 /*
-• Print the start date and time of the packet capture.
-• Print the duration of the packet capture in seconds with microsecond resolution.
-• Print the total number of packets.
-• Create two lists, one for unique senders and one for unique recipients, along with the total number
-of packets associated with each. This should be done at two layers: Ethernet and IP. For Ethernet,
-represent the addresses in hex-colon notation. For IP addresses, use the standard dotted decimal
-notation.
-• Create a list of machines participating in ARP, including their associated MAC addresses and, where
-possible, the associated IP addresses.
-• For UDP, create two lists for the unique ports seen: one for the source ports and one for the destination
-ports.
-• Report the average, minimum, and maximum packet sizes. The packet size refers to everything beyond
-the tcpdump header.
-*/
+ * wireview.cpp
+ * Zeb Carty and Michael McInerney
+ *
+ * Opens a tcpdump file and produces packet statistics
+ */
 
-//  Open an input file using function pcap open offline().
+int main(int argc, char **argv)
+{
+    pcap_t *fp;
+    char error_buff[PCAP_ERRBUF_SIZE];
+    char source_buff[PCAP_BUF_SIZE];
+    char *file;
 
-// Check that the data you are provided has been captured from Ethernet using function pcap datalink().
+    if (argc == 2) {
+        file = argv[1];
+    }
+    else {
+        cout << "Please supply filename" << endl;
+        exit(1);
+    }
 
-//  Read packets from the file using function pcap loop().
+    cout << "Opening file..." << endl;
+    //  Open an input file using function pcap open offline().
+    if (fp = pcap_open_offline(file, error_buff) == NULL)
+    {
+        cout << "failed" << endl;
+    }
+    cout << "done" << endl;
 
-// Close the file using function pcap close().
+    cout << "Checking if Ethernet..." << endl;
+    // Check that the data you are provided has been captured from Ethernet using function pcap datalink().
+    if (pcap_datalink(fp) != DLT_EN10MB) {
+        cout << "failed" << endl;
+    }
+    cout << "done" << endl;
+
+    //  Read packets from the file using function pcap loop().
+    // pcap_loop(fp, )
+    // Close the file using function pcap close().
+    pcap_close(fp);
+    return 0;
+}
