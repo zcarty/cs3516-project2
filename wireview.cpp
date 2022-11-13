@@ -25,15 +25,16 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    cout << "Opening file..." << endl;
+    cout << "Opening file...";
     //  Open an input file using function pcap open offline().
-    if (fp = pcap_open_offline(file, error_buff) == NULL)
+    fp = pcap_open_offline(file, error_buff);
+    if (fp == NULL)
     {
         cout << "failed" << endl;
     }
     cout << "done" << endl;
 
-    cout << "Checking if Ethernet..." << endl;
+    cout << "Checking if Ethernet...";
     // Check that the data you are provided has been captured from Ethernet using function pcap datalink().
     if (pcap_datalink(fp) != DLT_EN10MB) {
         cout << "failed" << endl;
@@ -41,7 +42,7 @@ int main(int argc, char **argv)
     cout << "done" << endl;
 
     //  Read packets from the file using function pcap loop().
-    // pcap_loop(fp, )
+    // pcap_loop(fp, 0, callback, NULL);
     // Close the file using function pcap close().
     pcap_close(fp);
     return 0;

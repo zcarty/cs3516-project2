@@ -1,7 +1,7 @@
 all: wireview
 
 wireview: wireview.cpp
-	g++ -lpcap wireview.cpp -o wireview
+	g++ wireview.cpp -o wireview -lpcap
 
 clean:
 	rm -f wireview
