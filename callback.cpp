@@ -68,6 +68,7 @@ void callback(u_char *args, const struct pcap_pkthdr *header, const u_char *pack
     }
 
     // remember to write function to free linkedlist mallocs to avoid possible memory leaks
+    // make sure to parse list items so that each can be printed in proper notations
 }
 
 void print_output() {
