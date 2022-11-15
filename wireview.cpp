@@ -1,7 +1,14 @@
 #include <iostream>
 #include <stdio.h>
 #include <pcap.h>
+#include "include.h"
+#include "callback.h"
 using namespace std;
+
+/* define PCAP_BUF_SIZE on non-linux or windows machines */
+#ifndef PCAP_BUF_SIZE 
+#define PCAP_BUF_SIZE 1024
+#endif
 
 /*
  * wireview.cpp
@@ -42,7 +49,7 @@ int main(int argc, char **argv)
     cout << "done" << endl;
 
     //  Read packets from the file using function pcap loop().
-    // pcap_loop(fp, 0, callback, NULL);
+    pcap_loop(fp, 10, callback, NULL); // change 10 back to -1 after testing is complete
     // Close the file using function pcap close().
     pcap_close(fp);
     return 0;
