@@ -3,3 +3,6 @@
 #include <iostream>
 #include <time.h>
 #include <net/ethernet.h>
+#include <netinet/ip.h>
+#include <netinet/if_ether.h>
+#include <arpa/inet.h>
