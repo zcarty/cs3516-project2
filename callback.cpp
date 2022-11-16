@@ -27,11 +27,18 @@ typedef struct listip {
     struct listip* next;
 } listip;
 
+typedef struct listport {
+    u_int16_t port;
+    struct listport* next;
+} listport;
+
 linkedlist* senders = NULL;
 linkedlist* recipients = NULL;
 listarp* participants = NULL;
 listip* ip_senders = NULL;
 listip* ip_recipients = NULL;
+listport* port_senders = NULL;
+listport* port_recipients = NULL;
 
 linkedlist* check_addr(u_char* address, linkedlist* list) {
     for(;list!=NULL;list=list->next) {
@@ -63,6 +70,12 @@ listip* check_ip(u_char* address, listip* list) {
                 same = false;
             }
         } if(same == true) return list;
+    } return NULL;
+}
+
+listport* check_port(u_int16_t port, listport* list) {
+    for(;list!=NULL;list=list->next) {
+        if(port == list->port) return list;
     } return NULL;
 }
 
@@ -163,6 +176,28 @@ void callback(u_char *args, const struct pcap_pkthdr *header, const u_char *pack
             ip_recipients = recipient;
         }
 
+        if(iphead.ip_p == IPPROTO_UDP) {
+
+            // SHOULD BE OPERATIONAL
+            struct udphdr udpstuff = *((struct udphdr*) (packet+14+sizeof(struct ip))); // excludes ip and ethernet headers for udp inclusion
+            u_int16_t sender_port = udpstuff.uh_sport;
+            listport* sender = check_port(sender_port, port_senders);
+            u_int16_t rec_port = udpstuff.uh_dport;
+            listport* recipient = check_port(rec_port, port_recipients);
+
+            // NEEDS FIXING
+            sender = (listport*) malloc(sizeof(listport));
+            sender->port = sender_port;
+            sender->next = port_senders;
+            port_senders = sender;
+
+            recipient = (listport*) malloc(sizeof(listport));
+            recipient->port = rec_port;
+            recipient->next = port_recipients;
+            port_recipients = recipient;
+
+        }
+
     }
 
 }
@@ -187,6 +222,10 @@ void print_output() {
     listip* list4 = ip_senders;
     listip* list5 = ip_recipients;
     listip* moretemp;
+
+    listport* list6 = port_senders;
+    listport* list7 = port_recipients;
+    listport* tempagain;
 
     cout << "------------------------------------------------" << endl
     << "SENDER MAC ADDRESSES LOGGED BELOW"  << endl 
@@ -258,5 +297,29 @@ void print_output() {
         moretemp = list5;
         list5 = list5->next;
         free(moretemp);
+    }
+
+    cout << "------------------------------------------------" << endl
+    << "SENDER PORTS LOGGED BELOW"  << endl 
+    << "------------------------------------------------" << endl;
+    while(list6 != NULL) {
+        for(;list6!=NULL;list6=list6->next) {
+            printf("%d\n", list6->port);
+        } cout << "Port printing code dispatched" << endl;
+
+        tempagain = list6;
+        list6 = list6->next;
+        free(tempagain);
+    }
+
+    cout << "------------------------------------------------" << endl
+    << "RECIPIENT PORTS LOGGED BELOW"  << endl 
+    << "------------------------------------------------" << endl;
+    while(list7 != NULL) {
+        cout << list7->port << endl;
+
+        tempagain = list7;
+        list7 = list7->next;
+        free(tempagain);
     }
 }
