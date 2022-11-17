@@ -2,6 +2,13 @@
 #include "callback.h"
 using namespace std;
 
+/*
+ * callback.cpp
+ * Zeb Carty and Michael McInerney
+ *
+ * Functions to produce packet statistics from tcpdump
+ */
+
 time_t min_time = 2e9; // should work for the next ~31 years
 suseconds_t min_us;
 time_t max_time = 0;
@@ -468,7 +475,7 @@ void print_output()
         free(list1);
     }
     avg_size = total / total_packets;
-    cout << "Average Size: " << avg_size << endl;
-    cout << "Minimum Size: " << min_size << endl;
-    cout << "Maximum Size: " << max_size << endl;
+    cout << "Average Size: " << avg_size << " bytes" << endl;
+    cout << "Minimum Size: " << min_size << " bytes" << endl;
+    cout << "Maximum Size: " << max_size << " bytes" << endl;
 }
