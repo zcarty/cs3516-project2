@@ -1,14 +1,11 @@
-#include <iostream>
-#include <stdio.h>
-#include <pcap.h>
 #include "include.h"
 #include "callback.h"
 using namespace std;
 
-/* define PCAP_BUF_SIZE on non-linux or windows machines */
-#ifndef PCAP_BUF_SIZE 
-#define PCAP_BUF_SIZE 1024
-#endif
+// /* define PCAP_BUF_SIZE on non-linux or windows machines */
+// #ifndef PCAP_BUF_SIZE 
+// #define PCAP_BUF_SIZE 1024
+// #endif
 
 /*
  * wireview.cpp
